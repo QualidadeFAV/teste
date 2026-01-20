@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linha de Cuidado da Catarata</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- VISUAL GLASSMORPHISM --- */
+        :root {
+            --color-primary: #243786;
+            --color-primary-light: #4c63b6;
+            --color-bg-gradient: linear-gradient(135deg, #f0f4ff 0%, #e2e8f0 100%);
+            --color-card-bg: rgba(255, 255, 255, 0.95);
+            --color-text-dark: #1a1a1a;
+            --color-text-light: #555555;
+            --color-border: #d1d9e6;
+            --color-success: #28a745;
+            --color-warning: #ffc107;
+            --color-danger: #d32f2f;
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background: var(--color-bg-gradient); min-height: 100vh; color: var(--color-text-dark); line-height: 1.6; font-size: 18px; overflow-x: hidden; }
+        
+        .container { width: 100%; max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        header { text-align: center; margin-bottom: 50px; padding-top: 30px; }
+        h1 { color: var(--color-primary); font-size: 2.4rem; margin-bottom: 10px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        p.subtitle { color: var(--color-text-light); font-size: 1.2rem; }
+
+        /* --- ANIMAÇÕES DE ENTRADA (NOVO) --- */
+        /* Define a animação de subir e aparecer */
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Aplica a animação aos elementos principais com delay para efeito cascata */
+        header { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; }
+        .clinical-stage-selector { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; animation-delay: 0.1s; }
+        .form-legend { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; animation-delay: 0.2s; }
+        .card:nth-of-type(1) { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; animation-delay: 0.3s; }
+        .card:nth-of-type(2) { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; animation-delay: 0.4s; }
+        .lgpd-section { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; animation-delay: 0.5s; }
+        .btn-submit { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; animation-delay: 0.6s; }
+        footer { animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; opacity: 0; animation-delay: 0.7s; }
+
+        /* --- ESTILOS DOS COMPONENTES --- */
+        .clinical-stage-selector { display: flex; justify-content: center; gap: 25px; margin-bottom: 50px; background: rgba(255,255,255,0.8); padding: 12px; border-radius: 60px; box-shadow: 0 8px 24px rgba(36,55,134,0.12); width: fit-content; margin-left: auto; margin-right: auto; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.4); }
+        .stage-option { padding: 15px 35px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: var(--transition); border: 2px solid transparent; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap; }
+        .stage-option.active { background-color: var(--color-primary); color: white; transform: scale(1.02); box-shadow: 0 4px 15px rgba(36, 55, 134, 0.4); }
+        .stage-option:not(.active):hover { background-color: rgba(240, 244, 255, 0.8); color: var(--color-primary); }
+
+        .card { background: var(--color-card-bg); border-radius: var(--radius); padding: 40px; margin-bottom: 35px; box-shadow: 0 8px 24px rgba(36,55,134,0.12); border: 1px solid rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px); transition: var(--transition); }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(36, 55, 134, 0.18); }
+        .section-title { color: var(--color-primary); font-size: 1.6rem; margin-bottom: 30px; border-bottom: 3px solid rgba(36, 55, 134, 0.1); padding-bottom: 15px; display: flex; align-items: center; gap: 15px; font-weight: 700; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .input-group { display: flex; flex-direction: column; gap: 10px; }
+        label { font-weight: 600; color: var(--color-text-dark); font-size: 1.1rem; }
+        input, select { padding: 16px; border: 2px solid var(--color-border); border-radius: 10px; font-size: 1.1rem; width: 100%; background-color: rgba(255,255,255,0.9); transition: var(--transition); box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        input:focus, select:focus { outline: none; border-color: var(--color-primary); background-color: #fff; box-shadow: 0 0 0 4px rgba(36, 55, 134, 0.15); }
+        .required-mark { color: var(--color-danger); font-weight: bold; }
+
+        .question-item { margin-bottom: 45px; } /* Animação interna removida para não conflitar com a externa */
+        .question-text { font-size: 1.35rem; font-weight: 600; margin-bottom: 20px; color: #2c2c2c; }
+        .scale-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .scale-btn { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 15px; border: 2px solid var(--color-border); border-radius: 14px; cursor: pointer; background: rgba(255,255,255,0.8); text-align: center; height: 100%; transition: all 0.2s; }
+        .scale-btn span.number { font-size: 1.8rem; font-weight: 700; color: var(--color-text-light); margin-bottom: 8px; }
+        .scale-btn span.label { font-size: 1rem; line-height: 1.3; color: var(--color-text-light); font-weight: 500; }
+        
+        .scale-btn:has(input:checked) { background-color: var(--color-primary); border-color: var(--color-primary); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(36, 55, 134, 0.3); }
+        .scale-btn:has(input:checked) span.number, .scale-btn:has(input:checked) span.label { color: #fff; }
+        .scale-btn input { position: absolute; opacity: 0; cursor: pointer; width: 0; height: 0; }
+
+        .score-box { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%); color: white; padding: 35px; border-radius: var(--radius); text-align: center; margin-top: 40px; display: none; box-shadow: 0 8px 24px rgba(36,55,134,0.2); }
+        .score-value { font-size: 3.5rem; font-weight: 800; display: block; margin: 10px 0; }
+        .score-interpretation { background: rgba(255,255,255,0.25); padding: 8px 20px; border-radius: 30px; font-weight: 600; backdrop-filter: blur(5px); }
+
+        .lgpd-section { margin-top: 35px; padding: 25px; background: rgba(255,255,255,0.9); border-left: 6px solid var(--color-primary); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .checkbox-wrapper { display: flex; gap: 15px; cursor: pointer; align-items: center; }
+        .checkbox-wrapper input { width: 24px; height: 24px; flex-shrink: 0; cursor: pointer; }
+
+        .btn-submit { background: linear-gradient(135deg, #28a745 0%, #218838 100%); color: white; border: none; padding: 22px 40px; font-size: 1.4rem; border-radius: 60px; cursor: pointer; width: 100%; margin-top: 50px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 15px; text-transform: uppercase; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3); }
+        .btn-submit:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 40px rgba(40, 167, 69, 0.4); }
+        .btn-submit:disabled { background: #cfd8dc; cursor: not-allowed; transform: none; box-shadow: none; color: #888; }
+        
+        hr.divider { border: 0; height: 2px; background: linear-gradient(to right, transparent, rgba(36, 55, 134, 0.2), transparent); margin: 30px 0; }
+        .form-legend { text-align: right; font-size: 0.95rem; color: #666; margin-bottom: 20px; font-style: italic; }
+
+        @media (max-width: 900px) { .container { max-width: 100%; padding: 0 15px; margin: 30px auto; } }
+        @media (max-width: 768px) { 
+            .form-grid { grid-template-columns: 1fr; } 
+            .clinical-stage-selector { width: 100%; justify-content: space-between; padding: 10px; } 
+            .stage-option { flex: 1; padding: 12px 10px; font-size: 0.9rem; } 
+            .scale-options { grid-template-columns: 1fr 1fr; } 
+        }
+        @media (max-width: 480px) { .scale-options { grid-template-columns: 1fr; } .btn-submit { padding: 18px; font-size: 1.1rem; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div style="font-size: 3.5rem; color: var(--color-primary); margin-bottom: 15px;">
+                <i class="fa-solid fa-eye"></i>
+            </div>
+            <h1>Gestão da Linha de Cuidado: Catarata</h1>
+            <p class="subtitle">Formulário de Acompanhamento Clínico</p>
+        </header>
+
+        <form id="cataractForm">
+            
+            <div class="clinical-stage-selector" role="group">
+                <div class="stage-option active" onclick="selectStage('pre')" id="btnPre" role="button" tabindex="0">
+                    <i class="fa-solid fa-calendar-check"></i> Pré-Operatório
+                </div>
+                <div class="stage-option" onclick="selectStage('pos')" id="btnPos" role="button" tabindex="0">
+                    <i class="fa-solid fa-notes-medical"></i> Pós-Operatório
+                </div>
+                <input type="hidden" id="stageInput" name="stage" value="pre">
+            </div>
+            
+            <p class="form-legend"><span class="required-mark">*</span> Campos de preenchimento obrigatório.</p>
+
+            <section class="card">
+                <div class="section-title"><i class="fa-solid fa-user-circle"></i> Dados do Paciente</div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label for="nome">Nome Completo <span class="required-mark">*</span></label>
+                        <input type="text" id="nome" name="nome" required placeholder="Nome completo" autocomplete="name">
+                    </div>
+                    <div class="input-group">
+                        <label for="mae">Nome da Mãe</label>
+                        <input type="text" id="mae" name="mae" placeholder="Opcional">
+                    </div>
+                    <div class="input-group">
+                        <label for="prontuario">Prontuário (ID) <span class="required-mark">*</span></label>
+                        <input type="number" id="prontuario" name="prontuario" required placeholder="Apenas números">
+                    </div>
+                    <div class="input-group">
+                        <label for="nascimento">Data de Nascimento <span class="required-mark">*</span></label>
+                        <input type="date" id="nascimento" name="nascimento" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="telefone">Telefone / WhatsApp <span class="required-mark">*</span></label>
+                        <input type="tel" id="telefone" name="telefone" required placeholder="(XX) 9XXXX-XXXX">
+                    </div>
+                    <div class="input-group">
+                        <label for="dataCirurgia">Data da Cirurgia</label>
+                        <input type="date" id="dataCirurgia" name="dataCirurgia">
+                    </div>
+                    <div class="input-group">
+                        <label for="tipoCirurgia">Tipo de Cirurgia</label>
+                        <select id="tipoCirurgia" name="tipoCirurgia">
+                            <option value="Catarata">Catarata</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="olhoOperado">Olho Operado <span class="required-mark">*</span></label>
+                        <select id="olhoOperado" name="olhoOperado" required>
+                            <option value="">Selecione...</option>
+                            <option value="OD">Direito (OD)</option>
+                            <option value="OE">Esquerdo (OE)</option>
+                            <option value="AO">Ambos (AO)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-title"><i class="fa-solid fa-glasses"></i> Avaliação de Função Visual</div>
+                <p style="margin-bottom: 30px; color: #555; background: rgba(36,55,134,0.05); padding: 15px; border-radius: 10px;">
+                    <i class="fa-regular fa-circle-question" style="color:var(--color-primary)"></i> Responda considerando sua visão <strong>nesta última semana</strong>.
+                </p>
+
+                <div id="questionsContainer"></div>
+
+                <div class="score-box" id="scoreSection">
+                    <h3>Escore Total</h3>
+                    <span class="score-value" id="scoreDisplay">0</span>
+                    <span class="score-interpretation" id="scoreText">--</span>
+                </div>
+            </section>
+
+            <div class="lgpd-section">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="lgpdConsent" required>
+                    <span><strong>Consentimento Obrigatório <span class="required-mark">*</span>:</strong> Autorizo o uso dos meus dados conforme a LGPD.</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn" disabled>
+                <i class="fa-solid fa-paper-plane"></i> Enviar Avaliação
+            </button>
+        </form>
+
+        <footer style="text-align: center; margin: 60px 0 30px; color: #888; font-size: 0.85rem;">
+            <p>© 2026 Fundação de Saúde Ocular - Setor de Catarata</p>
+        </footer>
+    </div>
+
+    <script>
+        const questions = [
+            "Sua visão está causando dificuldades nas suas atividades diárias?",
+            "Está satisfeito com sua visão no momento?",
+            "Apresenta alguma dificuldade em realizar tarefas do dia a dia?",
+            "Consegue ler jornal ou livro?",
+            "Consegue visualizar o rosto das pessoas?",
+            "Consegue visualizar os preços das mercadorias?",
+            "Tem dificuldade em visualizar obstáculos?",
+            "Realiza atividades manuais? (costura, artesanato, etc.)",
+            "Consegue ler legendas em filmes ou séries?",
+            "Consegue enxergar para praticar atividades de lazer?"
+        ];
+
+        // 1. Gerar Perguntas
+        const container = document.getElementById('questionsContainer');
+        questions.forEach((q, index) => {
+            const qNum = index + 1;
+            const html = `
+                <div class="question-item" role="group">
+                    <p class="question-text">${qNum}. ${q}</p>
+                    <div class="scale-options">
+                        ${createScaleButton(qNum, 1, 'Sem Dificuldade')}
+                        ${createScaleButton(qNum, 2, 'Alguma Dificuldade')}
+                        ${createScaleButton(qNum, 3, 'Muita Dificuldade')}
+                        ${createScaleButton(qNum, 4, 'Grande Dificuldade')}
+                    </div>
+                </div><hr class="divider">`;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+
+        function createScaleButton(qIndex, value, label) {
+            const id = `q${qIndex}_opt${value}`;
+            return `
+                <label class="scale-btn" for="${id}">
+                    <input type="radio" id="${id}" name="q${qIndex}" value="${value}" onchange="calculateScore()">
+                    <span class="number">${value}</span>
+                    <span class="label">${label}</span>
+                </label>`;
+        }
+
+        // 2. Lógica Visual
+        function selectStage(stage) {
+            document.getElementById('stageInput').value = stage;
+            const isPre = stage === 'pre';
+            document.getElementById('btnPre').classList.toggle('active', isPre);
+            document.getElementById('btnPos').classList.toggle('active', !isPre);
+            
+            const root = document.documentElement;
+            if(isPre) {
+                root.style.setProperty('--color-primary', '#243786');
+                root.style.setProperty('--color-primary-light', '#4c63b6');
+                document.querySelector('h1').innerText = "Avaliação Pré-Operatória";
+            } else {
+                root.style.setProperty('--color-primary', '#008F7A');
+                root.style.setProperty('--color-primary-light', '#42E695');
+                document.querySelector('h1').innerText = "Avaliação Pós-Operatória";
+            }
+            calculateScore();
+        }
+
+        function calculateScore() {
+            let total = 0, count = 0;
+            for(let i=1; i<=10; i++) {
+                const els = document.getElementsByName('q'+i);
+                for(let el of els) if(el.checked) { total += +el.value; count++; }
+            }
+            const box = document.getElementById('scoreSection');
+            if(count > 0) {
+                box.style.display = 'block';
+                document.getElementById('scoreDisplay').innerText = total;
+                const txt = document.getElementById('scoreText');
+                if(count === 10) {
+                    if(total <= 20) { txt.innerText = "Excelente/Boa"; box.style.background = "linear-gradient(135deg, #28a745, #81c784)"; }
+                    else if(total <= 30) { txt.innerText = "Dificuldade Moderada"; box.style.background = "linear-gradient(135deg, #FF9800, #FFC107)"; }
+                    else { txt.innerText = "Dificuldade Grave"; box.style.background = "linear-gradient(135deg, #d32f2f, #ef5350)"; }
+                } else {
+                    txt.innerText = `Respondido ${count}/10`;
+                    box.style.background = "linear-gradient(135deg, var(--color-primary), var(--color-primary-light))";
+                }
+            }
+        }
+
+        const check = document.getElementById('lgpdConsent');
+        const btn = document.getElementById('submitBtn');
+        check.addEventListener('change', () => btn.disabled = !check.checked);
+        selectStage('pre');
+
+        // 3. ENVIO FUNCIONAL (INTEGRAÇÃO DOPOST)
+        document.getElementById('cataractForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if(!this.checkValidity()) {
+                 const invalid = this.querySelector(':invalid');
+                 if(invalid) invalid.scrollIntoView({behavior: 'smooth', block: 'center'});
+                 return;
+            }
+
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Salvando...';
+            btn.disabled = true;
+            btn.style.background = "#666"; 
+
+            // URL DE ENVIO
+            var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUPv5nrP6tvStqu1KqPUKPtIodHH2oLw9podvNZfGO9BpjNOFhE_WebKoA8sYdXkrhMg/exec";
+
+            var formData = new FormData(this);
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                body: formData
+            })
+            .then(function(response) {
+                return response.text();
+            })
+            .then(function(texto) {
+                if (texto.includes("success")) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Sucesso!';
+                    btn.style.background = "#28a745";
+                    alert("✅ Dados salvos com sucesso!");
+                    
+                    setTimeout(() => {
+                        document.getElementById('cataractForm').reset();
+                        selectStage('pre');
+                        document.getElementById('scoreSection').style.display = 'none';
+                        btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Avaliação';
+                        btn.disabled = true;
+                        btn.style.background = ""; 
+                        document.getElementById('lgpdConsent').checked = false;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 2000);
+                } else {
+                    alert("⚠️ Erro: " + texto);
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.style.background = "#d32f2f";
+                }
+            })
+            .catch(function(erro) {
+                alert("❌ Erro de conexão: " + erro);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.background = "#d32f2f";
+            });
+        });
+    </script>
+</body>
+</html>
