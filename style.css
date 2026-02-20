@@ -278,6 +278,11 @@ footer { text-align: center; margin-top: 50px; padding-bottom: 30px; color: var(
 }
 .btn-modal:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0,0,0,0.25); }
 
+.warning-icon { color: var(--color-warning); }
+.warning-title { color: var(--color-warning); }
+.warning-btn { background: var(--color-warning); }
+.warning-btn:hover { background: #e65100; }
+
 /* --- RESPONSIVIDADE (MOBILE & TABLET) --- */
 @media (max-width: 900px) { 
     .container { max-width: 100%; padding: 0 15px; margin: 20px auto; } 
